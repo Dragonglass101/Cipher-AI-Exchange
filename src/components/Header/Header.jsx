@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useState } from "react";
+import { connectWallet, getActiveAccount, disconnectWallet } from "../../utils/wallet";
 import "./header.css";
 import { Container } from "reactstrap";
 
@@ -49,6 +50,13 @@ const Header = () => {
   
 
   const toggleMenu = () => menuRef.current.classList.toggle("active__menu");
+  /****************************************************************************/
+
+  const [wallet, setWallet] = useState(null);
+  const handleConnectWallet = async () => {
+    const { wallet } = await connectWallet();
+    setWallet(wallet);
+  };
 
   return (
     <header className="header" ref={headerRef}>
@@ -81,11 +89,15 @@ const Header = () => {
           </div>
 
           <div className="nav__right d-flex align-items-center gap-5 ">
-            <button className="btn d-flex gap-2 align-items-center">
+            <button onClick={handleConnectWallet} style={{color: 'white'}} className="btn d-flex gap-2 align-items-center">
               <span>
                 <i className="ri-wallet-line"></i>
               </span>
-              <Link to="/wallet">Connect Wallet</Link>
+              {wallet
+            ? wallet.address.slice(0, 4) +
+              "..." +
+              wallet.address.slice(wallet.address.length - 4, wallet.address.length)
+            : "Connect Wallet"}
             </button>
 
             <span className="mobile__menu">
