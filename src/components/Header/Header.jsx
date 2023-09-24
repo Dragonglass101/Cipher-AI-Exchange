@@ -1,9 +1,14 @@
 import React, { useRef, useEffect,useState } from "react";
+import aes from "crypto-js/aes.js";
+import { enc } from "crypto-js/core.js";
+import { createUser } from "../../utils/operations";
 import { connectWallet, getActiveAccount, disconnectWallet } from "../../utils/wallet";
+
 import "./header.css";
 import { Container } from "reactstrap";
 
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { getRootStorage } from "../../utils/api";
 
 const NAV__LINKS = [
   {
@@ -26,7 +31,6 @@ const NAV__LINKS = [
 
 const Header = () => {
   const headerRef = useRef(null);
-
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -53,6 +57,47 @@ const Header = () => {
   /****************************************************************************/
 
   const [wallet, setWallet] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const createUserKeys = async () =>{
+      try{
+        const publicKey = makeid(10);
+        const privateKey = makeid(10);
+        await createUser(privateKey, publicKey, wallet.address);
+        navigate("/market");
+      }catch(error){
+        alert("Transaction Failed:", error.message);
+      }
+    }
+
+    const userExists = async() =>{
+      const fullStorage = await getRootStorage();
+      const user = fullStorage["user_keys"][wallet.address];
+      if(!user) return false;
+      else return true;
+    }
+
+    if(!wallet) return;
+    if(userExists()) return;
+    createUserKeys();
+    //   const encryptWithAES = (text) => {
+    //     return aes.encrypt(text, passphrase).toString();
+    //   };
+    // vbWRWqRswF
+      
+    //   const decryptWithAES = (ciphertext) => {
+    //     const bytes = aes.decrypt(ciphertext, passphrase);
+        
+    //     const originalText = bytes.toString(enc.Utf8);
+    //     return originalText;
+    // };
+    // const cipher = encryptWithAES("hello world");
+    // console.log(decryptWithAES(cipher));
+    
+  }, [wallet]);
+
+
   const handleConnectWallet = async () => {
     if(wallet === null){
       const { wallet } = await connectWallet();
@@ -61,12 +106,21 @@ const Header = () => {
     else{
       await disconnectWallet();
       setWallet(null);
-      // const activeAccount = await getActiveAccount();
-      // console.log(activeAccount);
-      // setWallet(activeAccount);
       console.log("Disconnected");
     }
   };
+
+  function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
 
   return (
     <header className="header" ref={headerRef}>

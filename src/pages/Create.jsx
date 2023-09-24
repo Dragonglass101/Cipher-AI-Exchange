@@ -10,6 +10,7 @@ import img from "../assets/images/img-01.jpg";
 import avatar from "../assets/images/ava-01.png";
 
 import "../styles/create-item.css";
+import { getRootStorage } from "../utils/api.js";
 
 const item = {
   id: "01",
@@ -40,6 +41,8 @@ const Create = () => {
     if (!pklFile) return;
     if (!driverFile) return;
     if(!wallet) return;
+
+    UploadFiles();
 
   }
 
@@ -84,21 +87,33 @@ const Create = () => {
   
 
   async function appendHtml() {
+      // const fullStorage = await getRootStorage();
+
+      // const user = fullStorage["user_keys"][wallet.address];
+
+      // if(user) return;
+
+      // for (const userKey in fullStorage.user_keys) {
+      //   if (fullStorage.user_keys.hasOwnProperty(userKey)) {
+      //     const user = fullStorage.user_keys[userKey];
+      //     console.log(`User Key: ${userKey}`);
+      //     console.log(`Public Key: ${user.public_key}`);
+      //     console.log(`Private Key: ${user.private_key}`);
+      //     console.log('-----------------------');
+      //   }
+      // }
+
+      // for (let key of obj) {
+      //   console.log(key);
+      // }
+
       // var div = document.getElementById('python_code');
       // div.innerHTML += `<py-script src=${pyfile}></py-script>`;
   }
-  // appendHtml();
   
   return (
     <>
       <CommonSection title="Create Model" />
-      
-      {/* <py-script>
-        a = 21 {"\n"}
-        b = 100 {"\n"}
-        c = a + b {"\n"}
-        pyscript.write("mytext", c)
-      </py-script> */}
 
       <section>
         <Container>
@@ -110,6 +125,7 @@ const Create = () => {
 
             <Col lg="9" md="8" sm="6">
               <div className="create__item">
+                <button onClick={appendHtml}>Test</button>
                 <form>
                   <div className="form__input">
                     <label htmlFor="">Model Name</label>

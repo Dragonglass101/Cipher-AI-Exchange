@@ -1,11 +1,11 @@
 import axios from "axios"
 
-const contractAddress = "";
+const contractAddress = "KT1BMvBVVAKtPMUUVBHe5iwPvgd7rNA26inA";
 
 export const getBalance = async(address) => {
     try {
         const body = await axios.get(
-            `https://api.jakartanet.tzkt.io/v1/accounts/${address}/balance`
+            `https://api.ghostnet.tzkt.io/v1/accounts/${address}/balance`
         );
         return body.data;
     } catch (error) {
@@ -16,7 +16,7 @@ export const getBalance = async(address) => {
 export const getRootStorage = async() => {
     try {
         const body = await axios.get(
-            "https://api.jakartanet.tzkt.io" +
+            "https://api.ghostnet.tzkt.io" +
             "/v1/contracts/" +
             contractAddress +
             "/storage"
@@ -32,7 +32,7 @@ export const getRootStorage = async() => {
 export const getAllKeysBigMapByID = async(bigMapId) => {
     try {
         const body = await axios.get(
-            `https://api.jakartanet.tzkt.io/v1/bigmaps/${bigMapId}/keys`
+            `https://api.ghostnet.tzkt.io/v1/bigmaps/${bigMapId}/keys`
         )
         return body.data;
     } catch (error) {
@@ -43,7 +43,7 @@ export const getAllKeysBigMapByID = async(bigMapId) => {
 export const getKeyBigMapByID = async(bigMapId, key) => {
     try {
         const body = await axios.get(
-            `https://api.jakartanet.tzkt.io/v1/bigmaps/${bigMapId}/keys/${key}`
+            `https://api.ghostnet.tzkt.io/v1/bigmaps/${bigMapId}/keys/${key}`
         )
         return body.data;
     } catch (error) {
@@ -54,7 +54,7 @@ export const getKeyBigMapByID = async(bigMapId, key) => {
 export const getBigMapKeys = async(bigMapId) => {
     try {
         const body = await axios.get(
-            `https://api.jakartanet.tzkt.io/v1/bigmaps/${bigMapId}/keys`
+            `https://api.ghostnet.tzkt.io/v1/bigmaps/${bigMapId}/keys`
         )
         return body.data;
     } catch (error) {
