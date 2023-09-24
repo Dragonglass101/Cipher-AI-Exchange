@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import aes from "crypto-js/aes.js";
+import { enc } from "crypto-js/core.js";
 import { getActiveAccount } from "../utils/wallet.js";
 import "../firebase.js"
 
@@ -11,6 +13,7 @@ import avatar from "../assets/images/ava-01.png";
 
 import "../styles/create-item.css";
 import { getRootStorage } from "../utils/api.js";
+import { addCreator } from "../utils/operations.js";
 
 const item = {
   id: "01",
@@ -27,6 +30,7 @@ const Create = () => {
   const [pklFile, setPklFile] = useState();
   const [driverFile, setDriverFile] = useState();
   const modelName = useRef(null);
+  const price = useRef(null);
 
   useEffect(() => {
     if(!wallet){
@@ -36,60 +40,69 @@ const Create = () => {
     })();}
   }, []);
 
-  function handleSubmit(e){
+  async function handleSubmit(e){
     e.preventDefault();
     if (!pklFile) return;
     if (!driverFile) return;
     if(!wallet) return;
 
-    UploadFiles();
+    await UploadFiles();
 
+    const fullStorage = await getRootStorage();
+
+    const storage = getStorage();
+    getDownloadURL(ref(storage, `${wallet.address}/` + pklFile.name))
+      .then(async (fileUrl) => {
+        console.log("storage", fullStorage);
+        const user = fullStorage["user_keys"][wallet.address];
+        const encryptWithAES = (text, passphrase) => {
+          return aes.encrypt(text, passphrase).toString();
+        };
+        const cipher = encryptWithAES(fileUrl, user.public_key + user.private_key);
+        addCreator(cipher, modelName.current.value, price.current.value, wallet.address)
+      })
   }
 
-  function UploadFiles() {
+  async function UploadFiles() {
 		console.log('uploading: ' + pklFile.name + " and " + driverFile.name);
 
     const storage = getStorage();
-    // const storageRef = ref(storage, 'images/' + file.name);
-
-    // 'file' comes from the Blob or File API
     uploadBytes(ref(storage, `${wallet.address}/` + pklFile.name), pklFile).then((snapshot) => {
-          console.log('Uploaded a blob or file!');
+          console.log('Uploaded pickle file');
     });
     uploadBytes(ref(storage, `${wallet.address}/` + driverFile.name), driverFile).then((snapshot) => {
-          console.log('Uploaded a blob or file!');
+          console.log('Uploaded a driver file');
     });
 	}
 
-  // function DownloadFile(){
-  //   const storage = getStorage();
-  //   getDownloadURL(ref(storage, 'images/' + "test.py"))
-  //     .then(async (fileUrl) => {
-  //       const xhr = new XMLHttpRequest();
-  //       xhr.responseType = 'blob';
-  //       xhr.onload = function() {
-  //         const blob = xhr.response;
-  //         const url = window.URL.createObjectURL(blob);
-  //         const a = document.createElement('a');
-  //         a.href = url;
-  //         a.download = "test.py";
-  //         a.click();
-  //         window.URL.revokeObjectURL(url);
-  //       };
-  //       xhr.open('GET', fileUrl);
-  //       xhr.send();
-  //       console.log("url ", fileUrl);
-  //     })
-  //     .catch((error) => {
-  //       // Handle any errors
-  //     });
-  // }
+  function DownloadFile(){
+    // getDownloadURL(ref(storage, `${wallet.address}/${driverFile.name}`))
+    //   .then(async (fileUrl) => {
+    //     console.log("url ", fileUrl);
+
+        // const xhr = new XMLHttpRequest();
+        // xhr.responseType = 'blob';
+        // xhr.onload = function() {
+        //   const blob = xhr.response;
+        //   const url = window.URL.createObjectURL(blob);
+        //   const a = document.createElement('a');
+        //   a.href = url;
+        //   a.download = "test.py";
+        //   a.click();
+        //   window.URL.revokeObjectURL(url);
+        // };
+        // xhr.open('GET', fileUrl);
+        // xhr.send();
+      // })
+  }
   
 
   async function appendHtml() {
-      // const fullStorage = await getRootStorage();
+      const fullStorage = await getRootStorage();
 
-      // const user = fullStorage["user_keys"][wallet.address];
+      const user = fullStorage["user_keys"][wallet.address];
+      console.log(user.public_key, user.private_key);
+      console.log(price.current.value);
 
       // if(user) return;
 
@@ -125,7 +138,6 @@ const Create = () => {
 
             <Col lg="9" md="8" sm="6">
               <div className="create__item">
-                <button onClick={appendHtml}>Test</button>
                 <form>
                   <div className="form__input">
                     <label htmlFor="">Model Name</label>
@@ -144,7 +156,7 @@ const Create = () => {
 
                   <div className="form__input">
                     <label htmlFor="">Rental Price</label>
-                    <input
+                    <input ref={price}
                       type="number"
                       placeholder="Enter price for one item (TEZ)"
                     />
