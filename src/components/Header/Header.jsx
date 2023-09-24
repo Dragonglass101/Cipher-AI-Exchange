@@ -11,6 +11,8 @@ import { Container } from "reactstrap";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { getRootStorage } from "../../utils/api";
 
+import heroImg from "../../assets/images/hero.png";
+
 const NAV__LINKS = [
   {
     display: "Home",
@@ -130,9 +132,9 @@ const Header = () => {
           <div className="logo">
             <h2 className=" d-flex gap-2 align-items-center ">
               <span>
-                <i className="ri-fire-fill"></i>
+              <img width={48} height={48} src={heroImg}/>
               </span>
-              dAIs
+              cypherAI
             </h2>
           </div>
 
