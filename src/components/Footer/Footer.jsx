@@ -1,4 +1,5 @@
 import React from "react";
+import heroImg from "../../assets/images/hero.png";
 
 import { Container, Row, Col, ListGroup, ListGroupItem } from "reactstrap";
 import "./footer.css";
@@ -71,14 +72,12 @@ const Footer = () => {
             <div className="logo">
               <h2 className=" d-flex gap-2 align-items-center ">
                 <span>
-                  <i className="ri-fire-fill"></i>
+                  <img width={48} height={48} src={heroImg}/>
                 </span>
-                dAIs
+                cypherAI
               </h2>
               <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptate, quod repellat! Quis quos dolorum tenetur fuga?
-                Aspernatur rerum quae amet.
+              Discover cutting-edge AI models, trade insights, and leverage the power of collective intelligence. Your gateway to a world of limitless possibilities in Artificial Intelligence.
               </p>
             </div>
           </Col>
