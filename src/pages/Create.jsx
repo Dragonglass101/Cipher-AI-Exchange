@@ -74,55 +74,6 @@ const Create = () => {
           console.log('Uploaded a driver file');
     });
 	}
-
-  function DownloadFile(){
-    // getDownloadURL(ref(storage, `${wallet.address}/${driverFile.name}`))
-    //   .then(async (fileUrl) => {
-    //     console.log("url ", fileUrl);
-
-        // const xhr = new XMLHttpRequest();
-        // xhr.responseType = 'blob';
-        // xhr.onload = function() {
-        //   const blob = xhr.response;
-        //   const url = window.URL.createObjectURL(blob);
-        //   const a = document.createElement('a');
-        //   a.href = url;
-        //   a.download = "test.py";
-        //   a.click();
-        //   window.URL.revokeObjectURL(url);
-        // };
-        // xhr.open('GET', fileUrl);
-        // xhr.send();
-      // })
-  }
-  
-
-  async function appendHtml() {
-      const fullStorage = await getRootStorage();
-
-      const user = fullStorage["user_keys"][wallet.address];
-      console.log(user.public_key, user.private_key);
-      console.log(price.current.value);
-
-      // if(user) return;
-
-      // for (const userKey in fullStorage.user_keys) {
-      //   if (fullStorage.user_keys.hasOwnProperty(userKey)) {
-      //     const user = fullStorage.user_keys[userKey];
-      //     console.log(`User Key: ${userKey}`);
-      //     console.log(`Public Key: ${user.public_key}`);
-      //     console.log(`Private Key: ${user.private_key}`);
-      //     console.log('-----------------------');
-      //   }
-      // }
-
-      // for (let key of obj) {
-      //   console.log(key);
-      // }
-
-      // var div = document.getElementById('python_code');
-      // div.innerHTML += `<py-script src=${pyfile}></py-script>`;
-  }
   
   return (
     <>

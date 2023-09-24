@@ -47,7 +47,7 @@ export const rentModel = async(link_encoding, price) => {
 
         const op = await contract.methods
             .add_rental(
-                link_encoding, "tz1cDiwhxGMuFCHzaTQgbhSuheXz1rDo6XHh"
+                link_encoding, "tz1LtNrtvdjMgj3qHcpZU4jvNfZA6HZHisxW"
             )
             .send({
                 amount: price,
@@ -60,3 +60,22 @@ export const rentModel = async(link_encoding, price) => {
     }
 }
 
+// remove_rental(address)
+export const removeRental = async() => {
+    try {
+        const contract = await tezos.wallet.at(contractAddress);
+
+        const op = await contract.methods
+            .remove_rental(
+                "tz1cDiwhxGMuFCHzaTQgbhSuheXz1rDo6XHh"
+            )
+            .send({
+                amount: 0,
+                mutez: false,
+            });
+        await op.confirmation(1);
+    } catch (error) {
+        console.log(error.message);
+        throw error;
+    }
+}

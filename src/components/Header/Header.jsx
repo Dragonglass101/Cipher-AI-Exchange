@@ -3,6 +3,7 @@ import aes from "crypto-js/aes.js";
 import { enc } from "crypto-js/core.js";
 import { createUser } from "../../utils/operations";
 import { connectWallet, getActiveAccount, disconnectWallet } from "../../utils/wallet";
+import { removeRental } from "../../utils/operations";
 
 import "./header.css";
 import { Container } from "reactstrap";
