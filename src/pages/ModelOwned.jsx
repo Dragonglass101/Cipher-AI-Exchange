@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getActiveAccount } from "../utils/wallet";
+
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { green } from '@mui/material/colors';
-import Fab from '@mui/material/Fab';
-import CheckIcon from '@mui/icons-material/Check';
-import SaveIcon from '@mui/icons-material/Save';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import CommonSection from "../components/ui/Common-section/CommonSection";
 import { useParams } from "react-router-dom";
@@ -20,9 +18,11 @@ import LiveAuction from "../components/ui/Live-auction/LiveAuction";
 
 import "../styles/nft-details.css";
 
-import model_1 from "../assets/images/ava-01.png";
+import model_1 from "../assets/images/img-01.jpg";
+import ava_1 from "../assets/images/ava-01.png";
 
 import { Link } from "react-router-dom";
+import { getRootStorage } from "../utils/api";
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -40,6 +40,9 @@ const ModelOwned = () => {
   const { id } = useParams();
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const [output, setOutput] = useState(null);
+  const [wallet, setWallet] = useState();
+  const outputRef = useRef();
   const timer = React.useRef();
 
   const buttonSx = {
@@ -57,6 +60,47 @@ const ModelOwned = () => {
     };
   }, []);
 
+  function checkload(){
+    setOutput("5");
+    console.log("yes")
+  }
+
+  async function DownloadFile(){
+    const storage = getStorage();
+    const fullStorage = await getRootStorage();
+    const user = fullStorage["user_keys"][wallet.address];
+    const fileEncLink = fullStorage["creators"].link_encoding;
+
+    const fileUrl = decryptAES(fileEncLink);
+
+    console.log("url ", fileUrl);
+
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = function() {
+      const blob = xhr.response;
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "driver.py";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    };
+    xhr.open('GET', fileUrl);
+    xhr.send();
+  }
+
+  async function DisplayOutput(){
+      await DownloadFile();
+      var div = document.getElementById('python_code');
+      div.innerHTML += `<py-script src=driver.py></py-script>`;
+  }
+
+  function decryptAES(link){
+    // decrypt AES encrypted file link using user's private key
+    return link
+  }
+
   const handleButtonClick = () => {
     if (!loading) {
       setSuccess(false);
@@ -64,14 +108,15 @@ const ModelOwned = () => {
       timer.current = window.setTimeout(() => {
         setSuccess(true);
         setLoading(false);
-      }, 10000);
+        checkload();
+      }, 6000);
     }
   };
 
 
   return (
     <>
-      <CommonSection title="HelloKitty" />
+      <CommonSection title="Car Count Detection Model" />
 
       <section>
         <Container>
@@ -86,7 +131,7 @@ const ModelOwned = () => {
 
             <Col lg="6" md="6" sm="6">
               <div className="single__nft__content">
-                <h2>{"Model1"}</h2>
+                <h2>{"Car Count Detection"}</h2>
 
                 <div className=" d-flex align-items-center justify-content-between mt-4 mb-4">
                   <div className=" d-flex align-items-center gap-4 single__nft-seen">
@@ -110,17 +155,17 @@ const ModelOwned = () => {
 
                 <div className="nft__creator d-flex gap-3 align-items-center">
                   <div className="creator__img">
-                    <img src={model_1} alt="" className="w-100" />
+                    <img src={ava_1} alt="" className="w-100" />
                   </div>
 
                   <div className="creator__detail">
                     <p>Created By</p>
-                    <h6>{"Creator"}</h6>
+                    <h6>{"Trista Francis"}</h6>
                   </div>
                 </div>
 
                 <p className="my-4">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam adipisci cupiditate officia, nostrum et deleniti vero corrupti facilis minima laborum nesciunt nulla error natus saepe illum quasi ratione suscipit tempore dolores. Recusandae, similique modi voluptates dolore repellat eum earum sint.
+                A car count detection model is a computer vision model that is trained to identify and count the number of cars present in an image or video frame. This model uses deep learning techniques, typically convolutional neural networks (CNNs), to analyze visual features in the input data and make predictions about the presence and quantity of cars. It is commonly used in various applications such as traffic management, parking space monitoring, and vehicle analytics. The model can output the count of cars
                 </p>
                 <form>
                   <div className="form__input">
@@ -176,12 +221,12 @@ const ModelOwned = () => {
                     )}
                   </Box>
                 </Box>
-                <TextField
-                  disabled
-                  id="outlined-disabled"
-                  defaultValue="OUTPUT"
-                  className="bg-white w-100 text-center my-3 fw-bold"
-                />
+                
+                <h2 style={{marginTop: "20px"}}>Output</h2>
+                <div className="bg-white w-50 text-center my-3 fw-bold"
+                style={{padding: "20px", fontSize: "25px"}}>
+                  {!output & !loading ? "OUTPUT" : loading ? "Model is running..." : output}
+                </div>
               </div>
             </Col>
           </Row>
