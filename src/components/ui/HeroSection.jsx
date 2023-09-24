@@ -3,7 +3,7 @@ import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./hero-section.css";
 
-import heroImg from "../../assets/images/hero.jpg";
+import heroImg from "../../assets/images/hero.png";
 
 const HeroSection = () => {
   return (
@@ -37,7 +37,7 @@ const HeroSection = () => {
 
           <Col lg="6" md="6">
             <div className="hero__img">
-              <img src={heroImg} alt="" className="w-100" />
+              <img src={heroImg} alt="" className="w-75" />
             </div>
           </Col>
         </Row>
