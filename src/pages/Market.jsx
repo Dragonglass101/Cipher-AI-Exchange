@@ -26,6 +26,7 @@ const Market = () => {
 
       setData(filterData);
     }
+    //
 
     if (filterValue === "mid") {
       const filterData = NFT__DATA.filter(
