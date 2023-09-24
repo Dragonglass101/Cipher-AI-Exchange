@@ -54,8 +54,18 @@ const Header = () => {
 
   const [wallet, setWallet] = useState(null);
   const handleConnectWallet = async () => {
-    const { wallet } = await connectWallet();
-    setWallet(wallet);
+    if(wallet === null){
+      const { wallet } = await connectWallet();
+      setWallet(wallet);
+    }
+    else{
+      await disconnectWallet();
+      setWallet(null);
+      // const activeAccount = await getActiveAccount();
+      // console.log(activeAccount);
+      // setWallet(activeAccount);
+      console.log("Disconnected");
+    }
   };
 
   return (

@@ -1,4 +1,7 @@
-import React from "react";
+import React, {useState, useEffect, useRef} from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getActiveAccount } from "../utils/wallet.js";
+import "../firebase.js"
 
 import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/ui/Common-section/CommonSection";
@@ -19,9 +22,83 @@ const item = {
 };
 
 const Create = () => {
+  const [wallet, setWallet] = useState();
+  const [pklFile, setPklFile] = useState();
+  const [driverFile, setDriverFile] = useState();
+  const modelName = useRef(null);
+
+  useEffect(() => {
+    if(!wallet){
+        (async () => {
+        const activeAccount = await getActiveAccount();
+        setWallet(activeAccount);
+    })();}
+  }, []);
+
+  function handleSubmit(e){
+    e.preventDefault();
+    if (!pklFile) return;
+    if (!driverFile) return;
+    if(!wallet) return;
+
+  }
+
+  function UploadFiles() {
+		console.log('uploading: ' + pklFile.name + " and " + driverFile.name);
+
+    const storage = getStorage();
+    // const storageRef = ref(storage, 'images/' + file.name);
+
+    // 'file' comes from the Blob or File API
+    uploadBytes(ref(storage, `${wallet.address}/` + pklFile.name), pklFile).then((snapshot) => {
+          console.log('Uploaded a blob or file!');
+    });
+    uploadBytes(ref(storage, `${wallet.address}/` + driverFile.name), driverFile).then((snapshot) => {
+          console.log('Uploaded a blob or file!');
+    });
+	}
+
+  // function DownloadFile(){
+  //   const storage = getStorage();
+  //   getDownloadURL(ref(storage, 'images/' + "test.py"))
+  //     .then(async (fileUrl) => {
+  //       const xhr = new XMLHttpRequest();
+  //       xhr.responseType = 'blob';
+  //       xhr.onload = function() {
+  //         const blob = xhr.response;
+  //         const url = window.URL.createObjectURL(blob);
+  //         const a = document.createElement('a');
+  //         a.href = url;
+  //         a.download = "test.py";
+  //         a.click();
+  //         window.URL.revokeObjectURL(url);
+  //       };
+  //       xhr.open('GET', fileUrl);
+  //       xhr.send();
+  //       console.log("url ", fileUrl);
+  //     })
+  //     .catch((error) => {
+  //       // Handle any errors
+  //     });
+  // }
+  
+
+  async function appendHtml() {
+      // var div = document.getElementById('python_code');
+      // div.innerHTML += `<py-script src=${pyfile}></py-script>`;
+  }
+  // appendHtml();
+  
   return (
     <>
-      <CommonSection title="Create Item" />
+      <CommonSection title="Create Model" />
+      
+      {/* <py-script>
+        a = 21 {"\n"}
+        b = 100 {"\n"}
+        c = a + b {"\n"}
+        pyscript.write("mytext", c)
+      </py-script> */}
 
       <section>
         <Container>
@@ -35,38 +112,26 @@ const Create = () => {
               <div className="create__item">
                 <form>
                   <div className="form__input">
-                    <label htmlFor="">Upload File</label>
-                    <input type="file" className="upload__input" />
+                    <label htmlFor="">Model Name</label>
+                    <input ref={modelName} type="text" placeholder="Enter title" />
                   </div>
 
                   <div className="form__input">
-                    <label htmlFor="">Price</label>
+                    <label htmlFor="">Upload Pickle File</label>
+                    <input onChange={(e)=>{setPklFile(e.target.files[0]);}} type="file" className="upload__input" />
+                  </div>
+
+                  <div className="form__input">
+                    <label htmlFor="">Upload Driver Code File</label>
+                    <input onChange={(e)=>{setDriverFile(e.target.files[0]);}} type="file" className="upload__input" />
+                  </div>
+
+                  <div className="form__input">
+                    <label htmlFor="">Rental Price</label>
                     <input
                       type="number"
-                      placeholder="Enter price for one item (ETH)"
+                      placeholder="Enter price for one item (TEZ)"
                     />
-                  </div>
-
-                  <div className="form__input">
-                    <label htmlFor="">Minimum Bid</label>
-                    <input type="number" placeholder="Enter minimum bid" />
-                  </div>
-
-                  <div className=" d-flex align-items-center gap-4">
-                    <div className="form__input w-50">
-                      <label htmlFor="">Starting Date</label>
-                      <input type="date" />
-                    </div>
-
-                    <div className="form__input w-50">
-                      <label htmlFor="">Expiration Date</label>
-                      <input type="date" />
-                    </div>
-                  </div>
-
-                  <div className="form__input">
-                    <label htmlFor="">Title</label>
-                    <input type="text" placeholder="Enter title" />
                   </div>
 
                   <div className="form__input">
@@ -79,6 +144,8 @@ const Create = () => {
                       className="w-100"
                     ></textarea>
                   </div>
+
+                  <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
                 </form>
               </div>
             </Col>

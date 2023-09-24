@@ -11,7 +11,7 @@ import "../styles/nft-details.css";
 
 import { Link } from "react-router-dom";
 
-const NftDetails = () => {
+const ModelDetails = () => {
   const { id } = useParams();
 
   const singleNft = NFT__DATA.find((item) => item.id === id);
@@ -82,4 +82,4 @@ const NftDetails = () => {
   );
 };
 
-export default NftDetails;
+export default ModelDetails;

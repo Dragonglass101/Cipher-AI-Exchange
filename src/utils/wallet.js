@@ -8,6 +8,7 @@ const options = {
     preferredNetwork: preferredNetwork,
 };
 const rpcURL = "https://rpc.ghostnet.teztnets.xyz";
+// https://uoi3x99n7c.ghostnet.tezosrpc.midl.dev/
 const wallet = new BeaconWallet(options);
 
 const getActiveAccount = async() => {
