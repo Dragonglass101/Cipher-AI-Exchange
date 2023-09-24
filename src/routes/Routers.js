@@ -9,6 +9,7 @@ import Contact from "../pages/Contact";
 
 import Wallet from "../pages/Wallet";
 import ModelDetails from "../pages/AI_Model_Details";
+import ModelOwned from "../pages/ModelOwned";
 
 const Routers = () => {
   return (
@@ -17,7 +18,7 @@ const Routers = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/market" element={<Market />} />
       <Route path="/create" element={<Create />} />
-      <Route path="/contact" element={<Contact />} />
+      <Route path="/modelsowned" element={<ModelOwned />} />
       <Route path="/wallet" element={<Wallet />} />
       <Route path="/market/:id" element={<ModelDetails />} />
     </Routes>
