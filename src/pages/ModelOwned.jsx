@@ -40,6 +40,7 @@ const ModelOwned = () => {
   const { id } = useParams();
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const [file, setFile] = useState(null);
   const [output, setOutput] = useState(null);
   const [wallet, setWallet] = useState();
   const outputRef = useRef();
@@ -59,11 +60,8 @@ const ModelOwned = () => {
       clearTimeout(timer.current);
     };
   }, []);
+  function checkload(){setOutput("5");}
 
-  function checkload(){
-    setOutput("5");
-    console.log("yes")
-  }
 
   async function DownloadFile(){
     const storage = getStorage();
@@ -123,7 +121,7 @@ const ModelOwned = () => {
           <Row>
             <Col lg="6" md="6" sm="6">
               <img
-                src={model_1}
+                src={file ? file : model_1}
                 alt=""
                 className="w-100 single__nft-img"
               />
@@ -170,7 +168,7 @@ const ModelOwned = () => {
                 <form>
                   <div className="form__input">
                     <label htmlFor="" className="fw-bold">UPLOAD INPUT FILE</label>
-                    <input type="file" className="upload__input" />
+                    <input onChange={(e)=>{setFile(URL.createObjectURL(e.target.files[0]))}} type="file" className="upload__input" />
                   </div>
                 </form>
 
@@ -233,7 +231,7 @@ const ModelOwned = () => {
         </Container>
       </section>
 
-      <LiveAuction />
+      {/* <LiveAuction /> */}
     </>
   );
 };
