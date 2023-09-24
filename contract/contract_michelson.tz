@@ -1,0 +1,168 @@
+{
+    storage
+        (pair
+            (map %creators
+                address
+                (pair
+                    (string %link_encoding)
+                    (pair
+                        (string %model_name)
+                        (mutez %price))))
+            (pair
+                (map %rentals address string)
+                (map %user_keys
+                    address
+                    (pair
+                        (string %private_key)
+                        (string %public_key)))));
+    parameter
+        (or
+            (or
+                (pair %add_creator
+                    (pair
+                        (string %link_encoding)
+                        (string %model_name))
+                    (pair
+                        (mutez %price)
+                        (address %user_address)))
+                (or
+                    (pair %add_rental
+                        (string %link_encoding)
+                        (address %user_address))
+                    (address %buy_model)))
+            (or
+                (address %remove_creator)
+                (or
+                    (address %remove_rental)
+                    (pair %set_user_key
+                        (string %private_key)
+                        (pair
+                            (string %public_key)
+                            (address %user_address))))));
+    code
+        {
+            UNPAIR;
+            IF_LEFT
+                {
+                    IF_LEFT
+                        {
+                            SWAP;
+                            DUP;
+                            CAR;
+                            DUP 3;
+                            GET 3;
+                            DUP 4;
+                            CAR;
+                            CDR;
+                            DUP 5;
+                            CAR;
+                            CAR;
+                            PAIR 3;
+                            SOME;
+                            DIG 3;
+                            GET 4;
+                            UPDATE;
+                            UPDATE 1;
+                            NIL operation
+                        }
+                        {
+                            IF_LEFT
+                                {
+                                    SWAP;
+                                    DUP;
+                                    GET 3;
+                                    DUP 3;
+                                    CAR;
+                                    SOME;
+                                    DIG 3;
+                                    CDR;
+                                    UPDATE;
+                                    UPDATE 3;
+                                    NIL operation
+                                }
+                                {
+                                    DUP 2;
+                                    CAR;
+                                    DUP 2;
+                                    GET;
+                                    IF_NONE
+                                        {
+                                            PUSH int 841;
+                                            FAILWITH
+                                        }
+                                        {
+                                        };
+                                    GET 4;
+                                    AMOUNT;
+                                    COMPARE;
+                                    EQ;
+                                    IF
+                                        {
+                                        }
+                                        {
+                                            PUSH string "Invalid Amount";
+                                            FAILWITH
+                                        };
+                                    CONTRACT unit;
+                                    IF_NONE
+                                        {
+                                            PUSH string "Transaction Failed";
+                                            FAILWITH
+                                        }
+                                        {
+                                        };
+                                    NIL operation;
+                                    SWAP;
+                                    AMOUNT;
+                                    UNIT;
+                                    TRANSFER_TOKENS;
+                                    CONS
+                                }
+                        }
+                }
+                {
+                    IF_LEFT
+                        {
+                            SWAP;
+                            DUP;
+                            CAR;
+                            NONE
+                                (pair
+                                    string
+                                    (pair string mutez));
+                            DIG 3;
+                            UPDATE;
+                            UPDATE 1
+                        }
+                        {
+                            IF_LEFT
+                                {
+                                    SWAP;
+                                    DUP;
+                                    GET 3;
+                                    NONE string;
+                                    DIG 3;
+                                    UPDATE;
+                                    UPDATE 3
+                                }
+                                {
+                                    SWAP;
+                                    DUP;
+                                    GET 4;
+                                    DUP 3;
+                                    GET 3;
+                                    DUP 4;
+                                    CAR;
+                                    PAIR;
+                                    SOME;
+                                    DIG 3;
+                                    GET 4;
+                                    UPDATE;
+                                    UPDATE 4
+                                }
+                        };
+                    NIL operation
+                };
+            PAIR
+        }
+}
