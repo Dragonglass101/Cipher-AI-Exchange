@@ -23,7 +23,8 @@ export const NFT__DATA = [
     imgUrl: img01,
     creator: "Trista Francis",
     creatorImg: ava01,
-    currentBid: 5.89,
+    accuracy: 98.76,
+    currentBid: 15,
   },
 
   {
@@ -33,7 +34,8 @@ export const NFT__DATA = [
     imgUrl: img02,
     creator: "Trista Francis",
     creatorImg: ava02,
-    currentBid: 5.09,
+    accuracy: 94.34,
+    currentBid: 10,
   },
 
   {
@@ -43,7 +45,8 @@ export const NFT__DATA = [
     imgUrl: img03,
     creator: "Trista Francis",
     creatorImg: ava03,
-    currentBid: 6.89,
+    accuracy: 99.01,
+    currentBid: 30,
   },
 
   {
@@ -53,7 +56,8 @@ export const NFT__DATA = [
     imgUrl: img04,
     creator: "Trista Francis",
     creatorImg: ava04,
-    currentBid: 7.89,
+    accuracy: 93.84,
+    currentBid: 12,
   },
 
   // {

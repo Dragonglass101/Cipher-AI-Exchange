@@ -39,3 +39,24 @@ export const addCreator = async(link_encoding, model_name, price, user_address) 
         throw error;
     }
 }
+
+// add_rental(string link_encoding, address user_address)
+export const rentModel = async(link_encoding, price) => {
+    try {
+        const contract = await tezos.wallet.at(contractAddress);
+
+        const op = await contract.methods
+            .add_rental(
+                link_encoding, "tz1cDiwhxGMuFCHzaTQgbhSuheXz1rDo6XHh"
+            )
+            .send({
+                amount: price,
+                mutez: false,
+            });
+        await op.confirmation(1);
+    } catch (error) {
+        console.log(error.message);
+        throw error;
+    }
+}
+
